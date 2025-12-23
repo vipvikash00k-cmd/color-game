@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Color Game with Timer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      text-align: center;
+      font-family: Arial;
+      background: #111;
+      color: white;
+    }
+    .color {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      display: inline-block;
+      margin: 10px;
+      opacity: 0.6;
+    }
+    .active { opacity: 1; border: 3px solid white; }
+
+    #red { background:red; }
+    #green { background:green; }
+    #violet { background:purple; }
+
+    h2 { margin: 10px; }
+  </style>
+</head>
+
+<body>
+
+<h1>🎨 Color Game</h1>
+<h2>⏱️ Time: <span id="time">30</span> sec</h2>
+<h2>🪙 UC: <span id="uc">100</span></h2>
+
+<p>Select color (10 UC)</p>
+
+<div class="color" id="red" onclick="selectColor('Red', this)"></div>
+<div class="color" id="green" onclick="selectColor('Green', this)"></div>
+<div class="color" id="violet" onclick="selectColor('Violet', this)"></div>
+
+<h2 id="result"></h2>
+
+<script>
+  let uc = 100;
+  let time = 30;
+  let timer;
+  let userChoice = "";
+
+  function startTimer() {
+    timer = setInterval(() => {
+      time--;
+      document.getElementById("time").innerText = time;
+      if (time === 0) {
+        clearInterval(timer);
+        showResult();
+      }
+    }, 1000);
+  }
+
+  function selectColor(color, element) {
+    if (uc < 10) {
+      document.getElementById("result").innerText = "❌ UC खत्म!";
+      return;
+    }
+    userChoice = color;
+    document.querySelectorAll(".color").forEach(c => c.classList.remove("active"));
+    element.classList.add("active");
+  }
+
+  function showResult() {
+    if (userChoice === "") {
+      document.getElementById("result").innerText = "❌ No color selected";
+      return;
+    }
+
+    uc -= 10;
+    let colors = ["Red","Green","Violet"];
+    let winColor = colors[Math.floor(Math.random()*3)];
+
+    if (userChoice === winColor) {
+      uc += 20;
+      document.getElementById("result").innerHTML =
+        "Result: " + winColor + "<br>🎉 You Win +20 UC";
+    } else {
+      document.getElementById("result").innerHTML =
+        "Result: " + winColor + "<br>😢 You Lose";
+    }
+
+    document.getElementById("uc").innerText = uc;
+  }
+
+  startTimer();
+</script>
+
+</body>
+</html>
